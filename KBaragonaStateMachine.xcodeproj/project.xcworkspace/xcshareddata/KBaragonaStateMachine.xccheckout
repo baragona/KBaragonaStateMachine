@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>6FAB71C5-234F-4CAA-AEF2-F8C56E096092</string>
+	<key>IDESourceControlProjectName</key>
+	<string>KBaragonaStateMachine</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>5A72FCEF-A0AF-4182-9146-E100F7D50EFE</key>
+		<string>https://github.com/ojotoxy/KBaragonaStateMachine</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>KBaragonaStateMachine.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>5A72FCEF-A0AF-4182-9146-E100F7D50EFE</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/ojotoxy/KBaragonaStateMachine</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>5A72FCEF-A0AF-4182-9146-E100F7D50EFE</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>5A72FCEF-A0AF-4182-9146-E100F7D50EFE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>KBaragonaStateMachine</string>
+		</dict>
+	</array>
+</dict>
+</plist>

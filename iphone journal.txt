@@ -1,0 +1,246 @@
+Kevin Baragona
+
+iPhone Project Journal
+
+Milestone 1, Oct 26.
+Time spent: 4hrs
+
+Resources found online
+	Core graphics basics http://www.raywenderlich.com/32283/core-graphics-tutorial-lines-rectangles-and-gradients
+	Making a UIView redraw itself http://stackoverflow.com/questions/1503761/what-is-the-most-robust-way-to-force-a-uiview-to-redraw
+	Popup messages http://stackoverflow.com/questions/3737911/how-to-display-temporary-popup-message-on-iphone-ipad-ios
+
+Changes
+	In storyboard
+		- Removed tab bar, replaced with Tool Bar instead.
+		- tab bars are for switching views…tool bar is for actions
+		- Add a main view which is a class called StateView
+		- Autosizing layout constraints added, don’t know too much about it yet.
+		- Added popup menus notifying when the main buttons are pressed.
+	StateView
+		- currently inherits from UIView…
+		- knows how to draw itself
+		- gets a Core graphics context and draws some stuff
+		- overrides touch methods to handle appropriately
+Ideas
+	Concept of selected items
+		- when items are selected, they can either be edited (renamed), or deleted
+
+	Contextual tool bar. The tool bar at the bottom of the screen changes depending on what is selected.
+
+	You can select two items by touching them at the same time.
+		-when two states are selected, then you can add a new transition between them.
+
+	You can select a bunch of items by drawing a circle around them.
+
+	You can deselect by tapping empty space.
+
+	Pinch zooming, and Pinch rotation.
+	Scrolling will be done with two fingers.
+	Zooming and scrolling will be part of the same 2-finger gesture, much like how it works in Safari on web pages.
+
+	When a bunch of items are selected, you see an option to Duplicate or Delete all of them.
+
+END MILESTONE 1
+——————————————————————
+BEGIN MILESTONE 2
+——————————————————————
+Time spent: 5hrs
+
+Resources Found Online:
+	http://blog.amyworrall.com/post/11098565269/text-wrap-with-core-text
+	http://foobarpig.com/iphone/coretext-set-text-font-and-alignment-to-cfattributedstring.html
+Changes
+	New Class: Diagram - the model for the data that is displayed on screen
+		- clone method
+	New Class: StateObject - the representation of a state on the screen
+		-has position and label (init to 0,0, “”)
+	View Controller has a property that ties it to the StateView
+	Controller initializes the stateview with an new default Diagram object.
+	StateView draws the current diagram onto the screen.
+
+	Text Wrap and clipping paths. Figured out how to draw text inside a circlular object and have it fit nicely.
+
+	
+BUGS
+	-undo redo not done
+	-drawing text has a wrong coordinate system somewhere… evident when new state button is pressed.
+	
+IDEAS:
+	a way to make the bubble around text automatically fit its contents?
+
+
+END MILESTONE 2
+——————————————————————
+BEGIN MILESTONE 3
+——————————————————————
+Nov 4.
+Time spent: 2hr
+	Changes
+		FIXED Bug where text was drawn with wrong coordinate system
+		Single-finger Rotate and Zoom. Not the traditional iOS way, but okay for now.
+
+Nov 5.
+Time spent: .5 hr
+	Changes
+		Changing colors of drawn objects.
+
+Nov 6.
+Time spent 2hr
+	Changes
+		Correctly refreshes view when device is rotated.
+		Undo and Redo buttons work correctly. Uses two stacks. Redo stack is cleared upon performing a non-undo action.
+		Undo/Redo buttons are disabled when there is nothing on the respective stack.
+		Must remember to save an undo state whenever the diagram is modified.
+
+
+Nov 7.
+Time spent: 4hr
+	Changes
+		Refactoring graphics code for efficiency
+		Adding a notification area to show the user messages, non modal messages that allow other interactivity at the same time…
+		Converted graphics code to use an explicit view transformation matrix, instead of relying on context modificaion functions.
+			StateView has a view transformation matrix property.
+		Added a method into StateView
+			callbackWithPointOnNextTap
+			accepts a block argument. Will be called once on the next tap inside the StateView
+				-returns a point in Model space, not view space. Applies the inverse transformation matrix.
+			can be canceled with neverMindNextTap
+		After pressing New State, the user is directed to press where to insert the new object.
+			- when they press, that’s where the new one is added…For the first time, this allows you to actually construct something…
+
+Nov 8.
+Time spent 1hr
+	Changes
+		Determined that it is silly to draw text diagonally, so now, no matter how you rotate the view, text is drawn upright inside each circle
+
+Nov 11
+Time spent 3hr
+	Changes
+		Refactoring graphics code. View transformation matrix math was getting to a very convoluted, difficult state.
+		Starting to add functionality to StateView that recognizes when states are tapped, allowing them to be modified.
+		Currently all it does when a state is tapped is replace the text with “ABCDEF”
+		Added a gray circle used as an indicator to show the location of the last tap. A debugging tool…
+		Added drop shadow to states. Looks cool.
+		Tapping a state brings it to the top of the display order. Does not currently save an undo state.
+
+Nov 12
+Time spent 5hr
+	Changes
+		Since states in the diagram are circular, I test whether the tap is inside the circle, not its bounding rectangle.
+		States are allowed to overlap. Tapping detection now selects only the closest state to the tapped location, instead of all that contain the tapped point…
+		Widened the tap sensitive area around the state itself to allow for some tolerance…
+		Added a debugging tool, to draw the tap sensitive area around the state itself.
+		Changed the main tap handler to fire on touch Ended instead of began..
+		StateView has a new property, the currently selected states. Tapping on a state selects it.
+		Tapping on the background results in the selection being cleared.
+		Adding a highlight color to selected states. This replaces the normal drop shadow. It is drawn with a semi transparent radial gradient.
+		Added native iOS pinch scaling using a gesture recognizer. Was pleasantly surprised how easy the gesture recognizer made it.
+
+		Found resource: http://stackoverflow.com/questions/8108768/ios-pinch-scale-and-two-finger-rotate-at-same-time
+			-on how to recognize pinch and zoom at the same time…
+		Added native iOS rotation.
+		Added two-finger scrolling. BUG: scales and rotations are always applied to the diagram origin, not relative to finger positions…
+
+Nov 13
+Time Spent 2hr
+	Changes
+		Added a second Pan Gesture recognizer, this one is used for moving around selected objects.
+		Implemented the moving of selected objects.
+		Movement actions save an undo state.
+
+Nov 14
+Time spent 1hr
+	Changes
+		Improved the look of the selected object highlighting.
+
+Nov 15
+Time spent 2hr
+	Changes
+		Added automatic font size determination to state labels. It picks the largest font size that fits in the circle.
+		Discovered bug: sometimes text lines are not centered vertically within the circle. This is probably a complex text layout issue that will be hard to debug…
+		Converted the UIToolbar from having its objects created in interface builder to being added with code. This is is the contents of the toolbar can be dynamically changed depending on what the user is doing…
+		When nothing is selected, the new state button is visible.
+		When a state is selected, a rename button is visible. Tapping it opens a popup so the user can rename the state.
+
+Nov 16
+Time spent 4hr
+	DISCOVERED BUG: text is often being broken into multiple lines even in the middle of a word…
+	Changes
+		Selected objects array no longer stores direct object references, instead just stores indexes into the main array of objects. This is so the object array can be cloned, and the selected objects array will still be valid data…
+		Renaming of objects now works.
+
+		Beginning to add lasso selection, for the selection of multiple objects.
+		Modified all gesture recognizer actions to only do their normal processing if the gesture state is Changed.
+		Lasso selection somewhat works… but the lasso must go around the exact center of each state.
+		If multiple objects are selected, then tapping down on one of them means the current selection is still valid. This allows multiple objects to be dragged around.
+		
+
+
+
+END MILESTONE 3
+——————————————————————
+
+BEGIN MILESTONE 4
+——————————————————————
+Nov 17
+Time spent 2hr
+	Changes
+		Added delete object button, and made it work…
+		Adding method to Diagram object, “boundingBox”, this returns pretty much what it sounds like…
+		Adding method to StateObject object, “boundingBox”, this returns pretty much what it sounds like…
+		Graphics code is updated to request the state size from the state object itself.
+
+
+Nov 20-25
+Time spent: 10hrs
+
+	Changes
+		Various bugfixes.
+		Diagram will recenter itself so that it never gets lost in space.
+		If the view has been panned, it will make sure that the diagram is still visible.
+		If the view has been zoomed, it will have a minimum and maximum zoom level to keep things reasonable.
+		An animation frame callback has been added so that at a later time, the automatic zoom panning and scaling can be animated, to look more natural
+		When one or more gesture recognizers are active, auto zooming/panning is disabled.
+		Also, the background changes from green to red when the user is interacting with a gesture. This indicates that the system should not fiddle with the diagram while it is being changed. This is a debugging tool mostly…
+		A dot in the corner indicates the current diagram bound. This should be removed in final version.
+		Began to add transitions between states. Default diagram has a transition now.
+		NEW CLASS: Transitions are represented as TransitionObject objects. They hold pointers to the start and end states. This makes cloning a diagram, such as for saving undo states, rather interesting.
+		Transitions are drawn as a very basic arrow, which is drawn using explicitly computed line segments…
+		Transitions TODO: Draw transition labels when drawing transitions, edit labels, delete transition. Make object drawing order better. Add new transition.
+			
+	*worked on user guide
+
+
+END MILESTONE 4
+——————————————————————
+BEGIN Final Submission
+
+Nov 27 Time spent 2hr
+	Changes
+		Added method to TransitionObject
+		-(CGPathRef) sensitivePathForDisplayScale: (float) scale;
+			This allows you to get the rectangle in which taps should be considered to be tapping on the transition itself.
+		- (CGPoint) getStartPoint;
+                - (CGPoint) getEndPoint;
+		       get the start and end points of the object
+
+Nov 28 Time spent 6hr
+	Discovered BUG: App simply crashes when the last state is deleted.
+	BUG: You can delete one end of a transition but the transition will remain…
+	Changes
+		Made transitions a selectable object. They are selected if they are directly tapped, or, if a lasso is drawn around the start and end points.
+		If exactly two states are selected, you can now add a transition between them using a button that will appear.
+		If one transition is selected, you can reverse the direction by tapping a Reverse button that will appear.
+		Fixed bug - when you delete a state, it deletes all connected transitions.
+		Transition labels are now drawn. Although, quite crudely.
+		Transition labels can now be renamed…
+		Fixed bug - App no longer crashes when the last state is deleted.
+		The visual appearance of transition labels is much improved.
+
+
+Dec 1	Time spent 1hr
+	Removed some debugging visual elements
+	Cleaned up code
+	Added App Icon
+	Updated user guide to reflect new functionality.
